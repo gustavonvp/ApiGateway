@@ -7,8 +7,8 @@ import org.springframework.cloud.gateway.filter.factory.AbstractGatewayFilterFac
 import org.springframework.core.env.Environment;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.server.ServerHttpRequest;
 import org.springframework.http.server.ServerHttpResponse;
+import org.springframework.http.server.reactive.ServerHttpRequest;
 import org.springframework.stereotype.Component;
 import org.springframework.web.server.ServerWebExchange;
 import reactor.core.publisher.Mono;
@@ -35,7 +35,7 @@ public class AuthorizationHeaderFilter extends AbstractGatewayFilterFactory<Auth
     public GatewayFilter apply(Config config) {
         return (exchange, chain) -> {
 
-            ServerHttpRequest request = (ServerHttpRequest) exchange.getRequest();
+            ServerHttpRequest request = exchange.getRequest();
 
             if(!request.getHeaders().containsKey(HttpHeaders.AUTHORIZATION)) {
                 return onError(exchange, "No authorization header", HttpStatus.UNAUTHORIZED);
@@ -45,9 +45,9 @@ public class AuthorizationHeaderFilter extends AbstractGatewayFilterFactory<Auth
 
             String jwt = authorizationHeader.replace("Bearer", "");
 
-            if(!isJwtvalid(jwt)) {
-                return onError(exchange, "JWT token is not valid" , HttpStatus.UNAUTHORIZED);
-            }
+          //  if(!isJwtvalid(jwt)) {
+       //        return onError(exchange, "JWT token is not valid" , HttpStatus.UNAUTHORIZED);
+        //    }
 
             return chain.filter(exchange);
         };
